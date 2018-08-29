@@ -42,7 +42,7 @@ def player_select():
     marker_select = ''
 
     while not (marker_select == 'X' or marker_select == 'O'):
-        marker_select = input("Player 1: Select X or O    ")
+        marker_select = input("Player 1: Select X or O    ").upper()
     if marker_select == 'X':
         return ('X', 'O')
     else:
@@ -64,6 +64,20 @@ def draw_check(mboard):
         return True
 
 
+def space_check(gboard, position):
+
+    return gboard[position] == ""
+
+
+
+def player_choice(gboard, turn):
+
+    position = 0
+
+    while position not in range(1,10) or not space_check(gboard, position):
+        position = int(input("{turn}".format(turn = turn) + ": Select a move:  "))
+
+    return position
 
 def win_check(gboard, marker):
     return ((gboard[7] == marker and gboard[8] == marker and gboard[9] == marker) or #top row
@@ -96,15 +110,16 @@ def main_game():
     print(turn + ' will go first.')
     run_trigger = True
     while run_trigger:
-        while turn == "Player 1":
-            place_mark(gboard, mboard, player1, int(input("Player 1 Select a move:  ")))
+        if turn == "Player 1":
+            position = player_choice(gboard, turn)
+            place_mark(gboard, mboard, player1, position)
             draw_board()
             if win_check(gboard, player1) is True:
                 print("Player 1 wins!")
                 p1wincount.append(1)
                 run_trigger = False
                 break
-            if draw_check(mboard) is True:
+            if draw_check(gboard) is True:
                 run_trigger = False
                 break
             if win_check(gboard, player2) is True:
@@ -112,20 +127,21 @@ def main_game():
                 p2wincount.append(1)
                 run_trigger = False
                 break
-            if draw_check(mboard) is True:
+            if draw_check(gboard) is True:
                 run_trigger = False
                 break
             else:
                 turn = "Player 2"
-        while turn == "Player 2":
-            place_mark(gboard, mboard, player2, int(input("Player 2 Select a move:  ")))
+        else:
+            position = player_choice(gboard, turn)
+            place_mark(gboard, mboard, player2, position)
             draw_board()
             if win_check(gboard, player1) is True:
                 print("Player 1 wins!")
                 p1wincount.append(1)
                 run_trigger = False
                 break
-            if draw_check(mboard) is True:
+            if draw_check(gboard) is True:
                     run_trigger = False
                     break
             if win_check(gboard, player2) is True:
@@ -133,7 +149,7 @@ def main_game():
                 p2wincount.append(1)
                 run_trigger = False
                 break
-            if draw_check(mboard) is True:
+            if draw_check(gboard) is True:
                 run_trigger = False
                 break
             else:
@@ -141,8 +157,8 @@ def main_game():
 
     while not run_trigger:
         print("Total Score Player 1: {p1} | Player 2: {p2}".format(p1 = sum(p1wincount), p2 = sum(p2wincount)))
-        new_game_select = input("Play again? Yes or No?"  )
-        if new_game_select == "Yes":
+        new_game_select = input("Play again? Yes or No?"  ).upper()
+        if new_game_select == "Yes".upper():
             board_reset()
             main_game()
         else:
