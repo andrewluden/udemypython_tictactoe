@@ -62,6 +62,7 @@ def draw_check(mboard):
     if counter >= 9:
         print("Tie Game!")
         return True
+    
 
 
 def space_check(gboard, position):
@@ -76,6 +77,7 @@ def player_choice(gboard, turn):
 
     while position not in range(1,10) or not space_check(gboard, position):
         position = int(input("{turn}".format(turn = turn) + ": Select a move:  "))
+
 
     return position
 
@@ -111,49 +113,46 @@ def main_game():
     run_trigger = True
     while run_trigger:
         if turn == "Player 1":
-            position = player_choice(gboard, turn)
-            place_mark(gboard, mboard, player1, position)
-            draw_board()
-            if win_check(gboard, player1) is True:
-                print("Player 1 wins!")
-                p1wincount.append(1)
-                run_trigger = False
-                break
-            if draw_check(gboard) is True:
-                run_trigger = False
-                break
-            if win_check(gboard, player2) is True:
-                print("Player 2 wins!")
-                p2wincount.append(1)
-                run_trigger = False
-                break
-            if draw_check(gboard) is True:
+            if draw_check(mboard) is True:
                 run_trigger = False
                 break
             else:
-                turn = "Player 2"
-        else:
-            position = player_choice(gboard, turn)
-            place_mark(gboard, mboard, player2, position)
-            draw_board()
-            if win_check(gboard, player1) is True:
-                print("Player 1 wins!")
-                p1wincount.append(1)
-                run_trigger = False
-                break
-            if draw_check(gboard) is True:
+                position = player_choice(gboard, turn)
+                place_mark(gboard, mboard, player1, position)
+                draw_board()
+                if win_check(gboard, player1) is True:
+                    print("Player 1 wins!")
+                    p1wincount.append(1)
                     run_trigger = False
                     break
-            if win_check(gboard, player2) is True:
-                print("Player 2 wins!")
-                p2wincount.append(1)
-                run_trigger = False
-                break
-            if draw_check(gboard) is True:
+                if win_check(gboard, player2) is True:
+                    print("Player 2 wins!")
+                    p2wincount.append(1)
+                    run_trigger = False
+                    break
+                else:
+                    turn = "Player 2"
+        else:
+            if draw_check(mboard) is True:
                 run_trigger = False
                 break
             else:
-                turn = "Player 1"
+                position = player_choice(gboard, turn)
+                place_mark(gboard, mboard, player2, position)
+                draw_board()
+                if win_check(gboard, player1) is True:
+                    print("Player 1 wins!")
+                    p1wincount.append(1)
+                    run_trigger = False
+                    break
+                if win_check(gboard, player2) is True:
+                    print("Player 2 wins!")
+                    p2wincount.append(1)
+                    run_trigger = False
+                    break
+
+                else:
+                    turn = "Player 1"
 
     while not run_trigger:
         print("Total Score Player 1: {p1} | Player 2: {p2}".format(p1 = sum(p1wincount), p2 = sum(p2wincount)))
